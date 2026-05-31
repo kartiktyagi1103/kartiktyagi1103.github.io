@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>For Shivani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#faf1ec; --bg-2:#f3ded6; --bg-3:#ecccc4;
+    --rose:#c98a86; --rose-deep:#a85f59; --wine:#7d3f3a;
+    --ink:#5b3a37; --ink-soft:#8a625e; --paper:#fffaf6; --cream:#fbeee9;
+    --col:min(560px,100vw);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  /* lenis */
+  html.lenis,html.lenis body{height:auto;}
+  .lenis.lenis-smooth{scroll-behavior:auto !important;}
+  .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain;}
+  .lenis.lenis-stopped{overflow:hidden;}
+
+  body{
+    font-family:'Cormorant Garamond',Georgia,serif;
+    color:var(--ink); background:var(--bg-2);
+    overflow-x:hidden; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+
+  /* layered backdrop behind the column */
+  .backdrop{position:fixed;inset:0;z-index:0;
+    background:radial-gradient(120% 90% at 50% 0%,#fbf3ee,#ecccc4 60%,#e0b3a9 100%);}
+  .backdrop::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(40vw 40vw at 80% 12%,rgba(246,214,205,.7),transparent 70%),
+               radial-gradient(46vw 46vw at 15% 78%,rgba(233,189,180,.6),transparent 70%);}
+
+  /* phone-width story column */
+  .app{position:relative;z-index:2;width:var(--col);margin:0 auto;background:var(--bg);
+    box-shadow:0 0 90px rgba(125,63,58,.28);overflow:hidden;}
+
+  #petals{position:fixed;inset:0;z-index:40;pointer-events:none;}
+  .progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;
+    background:linear-gradient(90deg,var(--rose),var(--wine));box-shadow:0 0 12px rgba(168,95,89,.5);}
+
+  section{position:relative;}
+  .wrap{width:100%;padding:0 30px;}
+
+  /* ---- generic beat (text) ---- */
+  .beat{min-height:100svh;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;text-align:center;padding:16vh 0;}
+
+  .eyebrow{font-size:.8rem;letter-spacing:.4em;text-transform:uppercase;
+    color:var(--rose-deep);font-weight:500;padding-left:.4em;margin-bottom:1.4rem;}
+  .display{font-weight:300;line-height:1.04;letter-spacing:-.01em;color:var(--wine);
+    font-size:clamp(2.6rem,13vw,4.6rem);}
+  .display em{font-style:italic;font-weight:400;}
+  .script{font-family:'Pinyon Script',cursive;color:var(--rose-deep);
+    line-height:1.32;font-size:clamp(2.6rem,13vw,4.4rem);font-weight:400;padding-bottom:.18em;}
+  .lead{font-size:clamp(1.18rem,5vw,1.5rem);color:var(--ink);font-weight:400;
+    max-width:30ch;margin:1.5rem auto 0;line-height:1.55;text-wrap:pretty;}
+  .lead.sm{font-size:clamp(1.04rem,4.4vw,1.3rem);color:var(--ink-soft);font-style:italic;}
+  .divider{width:1px;height:clamp(44px,9vh,80px);margin:2.2rem auto;
+    background:linear-gradient(var(--rose),transparent);}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--rose);margin:1.7rem auto;
+    box-shadow:0 0 0 6px rgba(201,138,134,.16);}
+
+  /* ---- photo treatment ---- */
+  .ph{position:relative;border-radius:18px;overflow:hidden;background:var(--bg-3);
+    box-shadow:0 30px 55px -26px rgba(125,63,58,.6),0 0 0 1px rgba(168,95,89,.12);}
+  .ph img{display:block;width:100%;height:100%;object-fit:cover;
+    filter:saturate(.93) contrast(1.02) brightness(1.01);}
+  .ph::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(155deg,rgba(201,138,134,.16),rgba(125,63,58,.05) 55%,rgba(125,63,58,.14));
+    mix-blend-mode:multiply;}
+  .ph::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+    box-shadow:inset 0 0 0 1px rgba(255,250,246,.22);border-radius:18px;}
+  .caption{font-style:italic;color:var(--ink-soft);font-size:clamp(1rem,4.2vw,1.18rem);
+    margin-top:1rem;max-width:28ch;text-wrap:pretty;}
+
+  /* split beat: photo + text stacked */
+  .split{min-height:100svh;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:2.2rem;padding:16vh 0;text-align:center;}
+  .split .ph{aspect-ratio:4/5;width:100%;}
+
+  /* ---- full-bleed cinematic ---- */
+  .bleed{position:relative;min-height:100svh;display:flex;align-items:flex-end;
+    justify-content:center;overflow:hidden;}
+  .bleed-media{position:absolute;left:0;top:-8%;width:100%;height:116%;will-change:transform;}
+  .bleed-media img{width:100%;height:100%;object-fit:cover;filter:saturate(.96) contrast(1.02);}
+  .scrim{position:absolute;inset:0;
+    background:linear-gradient(to top,rgba(58,26,24,.88),rgba(58,26,24,.32) 46%,rgba(58,26,24,.12));}
+  .bleed-content{position:relative;z-index:3;text-align:center;padding:0 30px 13vh;color:var(--cream);}
+  .bleed-content .eyebrow{color:#ecc6bd;}
+  .bleed-content .display{color:#fff;text-shadow:0 2px 30px rgba(40,16,15,.4);}
+  .bleed-content .lead{color:#f3ddd6;}
+  .name-hero{font-family:'Pinyon Script',cursive;font-size:clamp(3.4rem,19vw,6rem);
+    color:#f7d9d2;line-height:1.05;margin-top:.2rem;text-shadow:0 2px 26px rgba(40,16,15,.45);}
+
+  /* scroll cue */
+  .cue{position:absolute;bottom:5.5vh;left:50%;transform:translateX(-50%);z-index:4;
+    display:flex;flex-direction:column;align-items:center;gap:.7rem;color:#f0cfc6;
+    font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;}
+  .cue .stem{width:1px;height:42px;background:rgba(247,217,210,.5);position:relative;overflow:hidden;}
+  .cue .stem::after{content:"";position:absolute;left:0;top:-50%;width:100%;height:50%;
+    background:#fff;animation:drip 2.1s cubic-bezier(.7,0,.3,1) infinite;}
+  @keyframes drip{0%{top:-50%}60%,100%{top:120%}}
+
+  /* gallery */
+  .gallery{padding:8vh 0 12vh;}
+  .gcols{column-count:2;column-gap:12px;padding:0 18px;margin-top:2.6rem;}
+  .gcols .ph{margin-bottom:12px;break-inside:avoid;width:100%;}
+
+  .joy-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-top:2.4rem;}
+  .joy-grid .ph{aspect-ratio:3/4;}
+
+  /* envelope */
+  .envelope-wrap{display:flex;flex-direction:column;align-items:center;gap:1.5rem;width:100%;}
+  .envelope{position:relative;width:min(82%,330px);aspect-ratio:3/2;cursor:pointer;perspective:1200px;
+    filter:drop-shadow(0 22px 40px rgba(125,63,58,.3));transition:transform .4s ease;}
+  .envelope:active{transform:scale(.985);}
+  .env-body{position:absolute;inset:0;border-radius:10px;overflow:hidden;
+    background:linear-gradient(160deg,#f7e3da,#ecc9bf);border:1px solid rgba(168,95,89,.28);}
+  .env-body::before,.env-body::after{content:"";position:absolute;top:0;width:52%;height:100%;
+    background:linear-gradient(120deg,#f2d8ce,#e6bcb1);}
+  .env-body::before{left:0;clip-path:polygon(0 0,0 100%,100% 50%);}
+  .env-body::after{right:0;clip-path:polygon(100% 0,100% 100%,0 50%);}
+  .flap{position:absolute;top:0;left:0;width:100%;height:62%;
+    background:linear-gradient(160deg,#eccabf,#e0aea2);clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:top;transition:transform .9s cubic-bezier(.6,0,.2,1);z-index:3;
+    border-bottom:1px solid rgba(168,95,89,.2);}
+  .seal{position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);width:52px;height:52px;
+    border-radius:50%;z-index:4;background:radial-gradient(circle at 35% 30%,#b9544d,#8a3a35);
+    box-shadow:inset 0 2px 5px rgba(255,255,255,.25),0 4px 10px rgba(125,63,58,.4);
+    display:flex;align-items:center;justify-content:center;color:#f7d9d2;
+    font-family:'Pinyon Script',cursive;font-size:1.7rem;transition:opacity .5s,transform .5s;}
+  .letter{position:absolute;left:6%;top:8%;width:88%;background:var(--paper);border-radius:6px;z-index:2;
+    padding:1.5rem 1.3rem;text-align:center;box-shadow:0 6px 16px rgba(125,63,58,.12);
+    transform:translateY(0);transition:transform 1s cubic-bezier(.6,0,.2,1);max-height:84%;overflow:hidden;}
+  .letter p{font-size:clamp(1rem,4.3vw,1.16rem);color:var(--ink);line-height:1.5;}
+  .letter .mini{font-family:'Pinyon Script',cursive;color:var(--rose-deep);font-size:1.6rem;margin-bottom:.35rem;}
+  .envelope.open .flap{transform:rotateX(178deg);}
+  .envelope.open .seal{opacity:0;transform:translate(-50%,-50%) scale(.4);}
+  .envelope.open .letter{transform:translateY(-58%);z-index:6;}
+  .envelope.open{aspect-ratio:auto;height:auto;padding-bottom:46%;}
+  .tap-hint{font-size:.78rem;letter-spacing:.3em;text-transform:uppercase;color:var(--rose-deep);
+    display:flex;align-items:center;gap:.6rem;transition:opacity .4s;}
+  .tap-hint .pulse{width:8px;height:8px;border-radius:50%;background:var(--rose);
+    animation:pulse 1.8s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.6);opacity:1}}
+  .envelope.open ~ .tap-hint{opacity:0;pointer-events:none;}
+
+  .signoff{font-family:'Pinyon Script',cursive;color:var(--wine);
+    font-size:clamp(2.2rem,10vw,3.4rem);line-height:1.18;}
+  .heart{display:inline-block;color:var(--rose-deep);}
+
+  footer{padding:9vh 30px 16vh;text-align:center;}
+  footer p{color:var(--ink-soft);font-size:1.05rem;letter-spacing:.04em;}
+
+  /* music */
+  .music{position:fixed;right:16px;bottom:16px;z-index:70;width:52px;height:52px;border-radius:50%;
+    border:1px solid rgba(168,95,89,.35);background:rgba(255,250,246,.82);backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;cursor:pointer;
+    box-shadow:0 6px 18px rgba(125,63,58,.2);color:var(--rose-deep);transition:transform .3s;}
+  .music:active{transform:scale(.92);}
+  .music svg{width:21px;height:21px;}
+  .music .bars{display:none;align-items:flex-end;gap:2px;height:17px;}
+  .music.playing .bars{display:flex;} .music.playing .mute{display:none;}
+  .bars span{width:3px;background:var(--rose-deep);border-radius:2px;animation:eq 1s ease-in-out infinite;}
+  .bars span:nth-child(1){height:40%} .bars span:nth-child(2){height:90%;animation-delay:.2s}
+  .bars span:nth-child(3){height:60%;animation-delay:.4s} .bars span:nth-child(4){height:100%;animation-delay:.1s}
+  @keyframes eq{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+  .music-note{position:fixed;right:76px;bottom:28px;z-index:70;font-size:.76rem;color:var(--ink-soft);
+    background:rgba(255,250,246,.9);padding:.4rem .7rem;border-radius:20px;
+    box-shadow:0 4px 12px rgba(125,63,58,.14);opacity:0;transform:translateX(8px);
+    transition:opacity .5s,transform .5s;pointer-events:none;white-space:nowrap;}
+  .music-note.show{opacity:1;transform:none;}
+
+  /* scroll-anim base (JS-driven) */
+  [data-reveal]{opacity:0;will-change:opacity,transform,filter;}
+
+  @media(prefers-reduced-motion:reduce){
+    [data-reveal]{opacity:1 !important;transform:none !important;filter:none !important;}
+  }
+</style>
+</head>
+<body>
+  <div class="backdrop"></div>
+  <canvas id="petals"></canvas>
+  <div class="progress" id="progress"></div>
+
+  <div class="app">
+    <!-- 1. HERO -->
+    <section class="bleed" data-screen-label="Sorry">
+      <div class="bleed-media" data-parallax="0.12"><img src="photos/p05.jpeg" alt="Shivani" style="object-position:center 30%" /></div>
+      <div class="scrim"></div>
+      <div class="bleed-content">
+        <p class="eyebrow" data-reveal>a letter, only for you</p>
+        <h1 class="display" data-reveal>I am<br /><em>so&nbsp;sorry</em></h1>
+        <p class="lead" data-reveal>for the words I shouldn't have said, and the ones I forgot to say.</p>
+        <p class="name-hero" data-reveal>Shivani</p>
+      </div>
+      <div class="cue"><span>scroll</span><span class="stem"></span></div>
+    </section>
+
+    <!-- 2. MISSING -->
+    <section class="split wrap" data-screen-label="Missing you">
+      <div>
+        <p class="eyebrow" data-reveal>right now</p>
+        <h2 class="display" data-reveal>I am<br /><em>missing you</em></h2>
+      </div>
+      <p class="lead" data-reveal>Every quiet hour is louder without you in it. The home holds its breath until you smile again.</p>
+      <figure class="ph" data-reveal style="aspect-ratio:4/5;width:78%"><img src="photos/p09.jpeg" alt="Shivani" data-parallax="0.05" /></figure>
+      <p class="caption" data-reveal>Even the mountains felt empty the moment you looked away.</p>
+    </section>
+
+    <!-- 3. GALLERY -->
+    <section class="gallery wrap" data-screen-label="Little moments">
+      <div style="text-align:center">
+        <p class="eyebrow" data-reveal>you, and us</p>
+        <h2 class="display" data-reveal>A hundred<br /><em>little moments</em></h2>
+        <p class="lead sm" data-reveal>and I would relive every single one of them with you.</p>
+      </div>
+      <div class="gcols">
+        <figure class="ph" data-reveal><img src="photos/p04.jpeg" alt="Shivani" data-parallax="0.04" /></figure>
+        <figure class="ph" data-reveal><img src="photos/p10.jpeg" alt="Shivani" data-parallax="0.04" /></figure>
+        <figure class="ph" data-reveal><img src="photos/p06.jpeg" alt="Shivani" data-parallax="0.04" /></figure>
+        <figure class="ph" data-reveal><img src="photos/p02.jpeg" alt="Shivani" data-parallax="0.04" /></figure>
+        <figure class="ph" data-reveal><img src="photos/p13.jpeg" alt="Shivani" data-parallax="0.04" /></figure>
+        <figure class="ph" data-reveal><img src="photos/p11.jpeg" alt="Shivani" data-parallax="0.04" /></figure>
+      </div>
+    </section>
+
+    <!-- 4. PERSONAL -->
+    <section class="split wrap" data-screen-label="Meri pari Bivi">
+      <figure class="ph" data-reveal style="aspect-ratio:3/4;width:82%"><img src="photos/p12.jpeg" alt="Shivani" data-parallax="0.05" /></figure>
+      <div>
+        <p class="script" data-reveal>Meri pari Bivi</p>
+        <p class="lead" data-reveal>My fairy, my wife — I never meant to dim the light you carry into every room. You are the softest, bravest, most beautiful part of my every day.</p>
+        <div class="dot" data-reveal></div>
+        <p class="lead sm" data-reveal>I'd cross a hundred storms just to hear you laugh once more.</p>
+      </div>
+    </section>
+
+    <!-- 5. LOVE -->
+    <section class="bleed" data-screen-label="I love you">
+      <div class="bleed-media" data-parallax="0.12"><img src="photos/p07.jpeg" alt="Shivani" style="object-position:center 22%" /></div>
+      <div class="scrim"></div>
+      <div class="bleed-content">
+        <p class="eyebrow" data-reveal>and always, always</p>
+        <h2 class="display" data-reveal>I <em>love</em><br />you</h2>
+        <p class="lead" data-reveal>not just to mend this — but endlessly, stubbornly, completely.</p>
+      </div>
+    </section>
+
+    <!-- 6. JOY -->
+    <section class="beat wrap" data-screen-label="Your smile">
+      <p class="script" data-reveal>and that smile of yours…</p>
+      <div class="joy-grid">
+        <figure class="ph" data-reveal><img src="photos/p03.jpeg" alt="Shivani" data-parallax="0.04" /></figure>
+        <figure class="ph" data-reveal><img src="photos/p14.jpeg" alt="Shivani" data-parallax="0.04" /></figure>
+      </div>
+      <p class="lead sm" data-reveal style="margin-top:2rem">the one that quietly fixes everything in me.</p>
+    </section>
+
+    <!-- 7. ENVELOPE -->
+    <section class="beat wrap" data-screen-label="Surprise">
+      <p class="eyebrow" data-reveal>a little something inside</p>
+      <div class="envelope-wrap" data-reveal>
+        <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open the letter">
+          <div class="env-body"></div>
+          <div class="letter">
+            <p class="mini">My promise</p>
+            <p>To listen more, to hold you closer, and to never let a sunset find us still apart. You&nbsp;+&nbsp;me — always worth it. <span class="heart">&#10084;</span></p>
+          </div>
+          <div class="flap"></div>
+          <div class="seal">S</div>
+        </div>
+        <p class="tap-hint"><span class="pulse"></span>Tap to open</p>
+      </div>
+    </section>
+
+    <!-- 8. CLOSING -->
+    <section class="split wrap" data-screen-label="Forever">
+      <figure class="ph" data-reveal style="aspect-ratio:3/4;width:78%"><img src="photos/p01.jpeg" alt="Shivani" data-parallax="0.05" /></figure>
+      <div>
+        <p class="eyebrow" data-reveal>until you forgive me, and long after</p>
+        <p class="signoff" data-reveal>Forever yours,<br />Pati&nbsp;Tyagi</p>
+        <div class="dot" data-reveal></div>
+        <p class="lead sm" data-reveal>Come back to me. I'll be right here, loving you.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>Made with every bit of my <span class="heart">&#10084;</span></p>
+    </footer>
+  </div>
+
+  <div class="music-note" id="musicNote">play a little softness</div>
+  <button class="music" id="music" aria-label="Toggle music">
+    <svg class="mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l9-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="15" cy="16" r="3"/></svg>
+    <div class="bars"><span></span><span></span><span></span><span></span></div>
+  </button>
+
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<script>
+/* ---------- Smooth scroll (Lenis) + scroll-linked story engine ---------- */
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let lenis = null;
+try{
+  if(window.Lenis && !reduce){
+    lenis = new Lenis({ lerp:0.085, smoothWheel:true, wheelMultiplier:0.95 });
+    document.documentElement.classList.add('lenis','lenis-smooth');
+  }
+}catch(e){ lenis = null; }
+
+const revealEls = [...document.querySelectorAll('[data-reveal]')];
+const parallaxEls = [...document.querySelectorAll('[data-parallax]')];
+const progress = document.getElementById('progress');
+
+function ease(t){ return t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
+
+function update(){
+  const vh = innerHeight;
+  // reveals: ease in as element rises into view, settle once centered
+  for(const el of revealEls){
+    const r = el.getBoundingClientRect();
+    const start = vh*0.94, end = vh*0.52;
+    let p = (start - r.top)/(start-end);
+    p = p<0?0:p>1?1:p;
+    const e = ease(p);
+    el.style.opacity = e.toFixed(3);
+    el.style.transform = 'translateY('+((1-e)*46).toFixed(2)+'px)';
+    el.style.filter = e<0.99 ? 'blur('+((1-e)*7).toFixed(2)+'px)' : 'none';
+  }
+  // parallax: drift relative to distance from viewport centre
+  for(const el of parallaxEls){
+    const r = el.getBoundingClientRect();
+    const center = r.top + r.height/2;
+    const amt = parseFloat(el.getAttribute('data-parallax'))||0;
+    const dist = center - vh/2;
+    el.style.transform = 'translate3d(0,'+(-dist*amt).toFixed(2)+'px,0)';
+  }
+  // progress
+  const h = document.documentElement;
+  const max = h.scrollHeight - h.clientHeight;
+  progress.style.width = (max>0 ? (Math.min(h.scrollTop||window.scrollY,max)/max)*100 : 0)+'%';
+}
+
+function raf(time){
+  if(lenis) lenis.raf(time);
+  update();
+  requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);
+update();
+addEventListener('resize', update);
+if(reduce){ addEventListener('scroll', update, {passive:true}); }
+
+/* ---------- Envelope ---------- */
+const env = document.getElementById('envelope');
+function openEnv(){ env.classList.add('open'); }
+env.addEventListener('click', openEnv);
+env.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openEnv(); }});
+
+/* ---------- Floating petals ---------- */
+const cv = document.getElementById('petals'), ctx = cv.getContext('2d');
+let W,H,dpr;
+function resize(){ dpr=Math.min(devicePixelRatio||1,2); W=cv.width=innerWidth*dpr; H=cv.height=innerHeight*dpr;
+  cv.style.width=innerWidth+'px'; cv.style.height=innerHeight+'px'; }
+resize(); addEventListener('resize', resize);
+const COLORS=['#e7b4ab','#d99b94','#f0cfc6','#c98a86','#ecc0b6'];
+function mk(initial){return{x:Math.random()*innerWidth,y:initial?Math.random()*innerHeight:-30,
+  r:6+Math.random()*9,sp:.3+Math.random()*.7,sway:.6+Math.random()*1.2,phase:Math.random()*6.28,
+  rot:Math.random()*6.28,vr:(Math.random()-.5)*.02,col:COLORS[(Math.random()*COLORS.length)|0],op:.4+Math.random()*.4};}
+const petals=[]; const COUNT=innerWidth<560?14:24;
+for(let i=0;i<COUNT;i++) petals.push(mk(true));
+function draw(p){ctx.save();ctx.translate(p.x*dpr,p.y*dpr);ctx.rotate(p.rot);ctx.scale(dpr,dpr);
+  ctx.globalAlpha=p.op;ctx.fillStyle=p.col;ctx.beginPath();ctx.moveTo(0,-p.r);
+  ctx.bezierCurveTo(p.r*.9,-p.r*.6,p.r*.7,p.r*.7,0,p.r);
+  ctx.bezierCurveTo(-p.r*.7,p.r*.7,-p.r*.9,-p.r*.6,0,-p.r);ctx.fill();ctx.restore();}
+let t=0;
+function petalTick(){ctx.clearRect(0,0,W,H);t+=.016;
+  for(const p of petals){p.y+=p.sp;p.x+=Math.sin(t*p.sway+p.phase)*.5;p.rot+=p.vr;
+    if(p.y>innerHeight+30)Object.assign(p,mk(false));draw(p);}requestAnimationFrame(petalTick);}
+if(!reduce) petalTick(); else petals.forEach(draw);
+
+/* ---------- Gentle ambient music ---------- */
+const musicBtn=document.getElementById('music'), musicNote=document.getElementById('musicNote');
+let actx=null,master=null,voices=[],playing=false;
+function buildAmbient(){
+  actx=new (window.AudioContext||window.webkitAudioContext)();
+  master=actx.createGain();master.gain.value=0.0001;
+  const lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1400;lp.Q.value=.4;
+  master.connect(lp);lp.connect(actx.destination);
+  [164.81,220,277.18,329.63,415.30].forEach((f,i)=>{
+    const o=actx.createOscillator();o.type=i%2?'sine':'triangle';o.frequency.value=f;o.detune.value=(Math.random()-.5)*6;
+    const g=actx.createGain();g.gain.value=.16/5;o.connect(g);g.connect(master);o.start();voices.push(o);});
+  const lfo=actx.createOscillator();lfo.frequency.value=.07;const lg=actx.createGain();lg.gain.value=.05;
+  lfo.connect(lg);lg.connect(master.gain);lfo.start();
+}
+function toggleMusic(){
+  if(!actx) buildAmbient(); if(actx.state==='suspended') actx.resume();
+  playing=!playing; const now=actx.currentTime;
+  master.gain.cancelScheduledValues(now);master.gain.setValueAtTime(master.gain.value,now);
+  master.gain.linearRampToValueAtTime(playing?0.11:0.0001, now+(playing?2.2:1.0));
+  musicBtn.classList.toggle('playing',playing);
+}
+musicBtn.addEventListener('click',toggleMusic);
+setTimeout(()=>{if(!playing){musicNote.classList.add('show');setTimeout(()=>musicNote.classList.remove('show'),4200);}},2600);
+</script>
+</body>
+</html>
