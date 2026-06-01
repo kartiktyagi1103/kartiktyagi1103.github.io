@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>For Shivani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --rose:#c98a86; --rose-deep:#a85f59; --wine:#7d3f3a;
+    --ink:#5b3a37; --ink-soft:#8a625e; --paper:#fffaf6; --cream:#fbeee9;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  .lenis.lenis-smooth{scroll-behavior:auto !important;}
+  .lenis.lenis-stopped{overflow:hidden;}
+  body{
+    font-family:'Cormorant Garamond',Georgia,serif;color:var(--ink);
+    background:#f1d8d0;overflow-x:hidden;line-height:1.5;-webkit-font-smoothing:antialiased;
+  }
+
+  /* 3D world */
+  #webgl{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block;}
+  /* dreamy overlays */
+  .vignette{position:fixed;inset:0;z-index:2;pointer-events:none;
+    background:radial-gradient(120% 100% at 50% 45%,transparent 55%,rgba(125,63,58,.28));}
+  .grain{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.05;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+  #petals{position:fixed;inset:0;z-index:4;pointer-events:none;}
+  .progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;
+    background:linear-gradient(90deg,var(--rose),var(--wine));box-shadow:0 0 12px rgba(168,95,89,.5);}
+
+  main{position:relative;z-index:5;}
+  section{min-height:100svh;display:flex;align-items:center;justify-content:center;
+    padding:14vh 6vw;position:relative;}
+
+  /* frosted story panel */
+  .panel{position:relative;text-align:center;max-width:30rem;width:100%;
+    padding:2.6rem 2rem;border-radius:26px;
+    background:linear-gradient(160deg,rgba(252,241,236,.62),rgba(248,228,221,.5));
+    backdrop-filter:blur(9px) saturate(1.15);-webkit-backdrop-filter:blur(9px) saturate(1.15);
+    border:1px solid rgba(255,255,255,.5);
+    box-shadow:0 30px 70px -34px rgba(125,63,58,.6),inset 0 1px 0 rgba(255,255,255,.5);}
+  /* open beats float without a card */
+  .float{text-align:center;max-width:30rem;}
+  .float .display,.float .name-hero{text-shadow:0 2px 30px rgba(247,225,219,.9),0 1px 3px rgba(125,63,58,.25);}
+  .float .eyebrow,.float .lead{text-shadow:0 1px 18px rgba(247,225,219,.95);}
+
+  .eyebrow{font-size:.78rem;letter-spacing:.4em;text-transform:uppercase;
+    color:var(--rose-deep);font-weight:500;padding-left:.4em;margin-bottom:1.3rem;}
+  .display{font-weight:300;line-height:1.05;letter-spacing:-.01em;color:var(--wine);
+    font-size:clamp(2.6rem,12vw,4.4rem);}
+  .display em{font-style:italic;font-weight:400;}
+  .script{font-family:'Pinyon Script',cursive;color:var(--rose-deep);
+    line-height:1.3;font-size:clamp(2.6rem,12vw,4rem);font-weight:400;padding-bottom:.16em;}
+  .lead{font-size:clamp(1.16rem,4.8vw,1.45rem);color:var(--ink);font-weight:400;
+    max-width:30ch;margin:1.4rem auto 0;line-height:1.55;text-wrap:pretty;}
+  .lead.sm{font-size:clamp(1.02rem,4.2vw,1.26rem);color:var(--ink-soft);font-style:italic;}
+  .name-hero{font-family:'Pinyon Script',cursive;font-size:clamp(3.2rem,17vw,5.4rem);
+    color:var(--rose-deep);line-height:1.06;margin-top:.2rem;}
+  .divider{width:1px;height:clamp(40px,8vh,70px);margin:2rem auto;
+    background:linear-gradient(var(--rose),transparent);}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--rose);margin:1.6rem auto;
+    box-shadow:0 0 0 6px rgba(201,138,134,.16);}
+  .signoff{font-family:'Pinyon Script',cursive;color:var(--wine);
+    font-size:clamp(2.2rem,9vw,3.2rem);line-height:1.18;}
+  .heart{display:inline-block;color:var(--rose-deep);}
+
+  /* scroll-linked reveal (JS) */
+  [data-reveal]{opacity:0;will-change:opacity,transform,filter;}
+
+  /* scroll cue */
+  .cue{position:absolute;bottom:5vh;left:50%;transform:translateX(-50%);z-index:6;
+    display:flex;flex-direction:column;align-items:center;gap:.7rem;color:var(--rose-deep);
+    font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;
+    text-shadow:0 1px 16px rgba(247,225,219,.95);}
+  .cue .stem{width:1px;height:40px;background:var(--rose-deep);position:relative;overflow:hidden;opacity:.5;}
+  .cue .stem::after{content:"";position:absolute;left:0;top:-50%;width:100%;height:50%;
+    background:var(--wine);animation:drip 2.1s cubic-bezier(.7,0,.3,1) infinite;}
+  @keyframes drip{0%{top:-50%}60%,100%{top:120%}}
+
+  /* envelope */
+  .envelope-wrap{display:flex;flex-direction:column;align-items:center;gap:1.4rem;width:100%;}
+  .envelope{position:relative;width:min(80%,320px);aspect-ratio:3/2;cursor:pointer;perspective:1200px;
+    filter:drop-shadow(0 22px 40px rgba(125,63,58,.34));transition:transform .4s ease;}
+  .envelope:active{transform:scale(.985);}
+  .env-body{position:absolute;inset:0;border-radius:10px;overflow:hidden;
+    background:linear-gradient(160deg,#f7e3da,#ecc9bf);border:1px solid rgba(168,95,89,.28);}
+  .env-body::before,.env-body::after{content:"";position:absolute;top:0;width:52%;height:100%;
+    background:linear-gradient(120deg,#f2d8ce,#e6bcb1);}
+  .env-body::before{left:0;clip-path:polygon(0 0,0 100%,100% 50%);}
+  .env-body::after{right:0;clip-path:polygon(100% 0,100% 100%,0 50%);}
+  .flap{position:absolute;top:0;left:0;width:100%;height:62%;
+    background:linear-gradient(160deg,#eccabf,#e0aea2);clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:top;transition:transform .9s cubic-bezier(.6,0,.2,1);z-index:3;
+    border-bottom:1px solid rgba(168,95,89,.2);}
+  .seal{position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);width:50px;height:50px;
+    border-radius:50%;z-index:4;background:radial-gradient(circle at 35% 30%,#b9544d,#8a3a35);
+    box-shadow:inset 0 2px 5px rgba(255,255,255,.25),0 4px 10px rgba(125,63,58,.4);
+    display:flex;align-items:center;justify-content:center;color:#f7d9d2;
+    font-family:'Pinyon Script',cursive;font-size:1.6rem;transition:opacity .5s,transform .5s;}
+  .letter{position:absolute;left:6%;top:8%;width:88%;background:var(--paper);border-radius:6px;z-index:2;
+    padding:1.4rem 1.2rem;text-align:center;box-shadow:0 6px 16px rgba(125,63,58,.12);
+    transform:translateY(0);transition:transform 1s cubic-bezier(.6,0,.2,1);max-height:84%;overflow:hidden;}
+  .letter p{font-size:clamp(1rem,4.2vw,1.14rem);color:var(--ink);line-height:1.5;}
+  .letter .mini{font-family:'Pinyon Script',cursive;color:var(--rose-deep);font-size:1.55rem;margin-bottom:.3rem;}
+  .envelope.open .flap{transform:rotateX(178deg);}
+  .envelope.open .seal{opacity:0;transform:translate(-50%,-50%) scale(.4);}
+  .envelope.open .letter{transform:translateY(-58%);z-index:6;}
+  .envelope.open{aspect-ratio:auto;height:auto;padding-bottom:46%;}
+  .tap-hint{font-size:.76rem;letter-spacing:.3em;text-transform:uppercase;color:var(--rose-deep);
+    display:flex;align-items:center;gap:.6rem;transition:opacity .4s;}
+  .tap-hint .pulse{width:8px;height:8px;border-radius:50%;background:var(--rose);
+    animation:pulse 1.8s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.6);opacity:1}}
+  .envelope.open ~ .tap-hint{opacity:0;pointer-events:none;}
+
+  /* music */
+  .music{position:fixed;right:16px;bottom:16px;z-index:70;width:52px;height:52px;border-radius:50%;
+    border:1px solid rgba(168,95,89,.35);background:rgba(255,250,246,.82);backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;cursor:pointer;
+    box-shadow:0 6px 18px rgba(125,63,58,.2);color:var(--rose-deep);transition:transform .3s;}
+  .music:active{transform:scale(.92);}
+  .music svg{width:21px;height:21px;}
+  .music .bars{display:none;align-items:flex-end;gap:2px;height:17px;}
+  .music.playing .bars{display:flex;} .music.playing .mute{display:none;}
+  .bars span{width:3px;background:var(--rose-deep);border-radius:2px;animation:eq 1s ease-in-out infinite;}
+  .bars span:nth-child(1){height:40%} .bars span:nth-child(2){height:90%;animation-delay:.2s}
+  .bars span:nth-child(3){height:60%;animation-delay:.4s} .bars span:nth-child(4){height:100%;animation-delay:.1s}
+  @keyframes eq{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+  .music-note{position:fixed;right:76px;bottom:28px;z-index:70;font-size:.76rem;color:var(--ink-soft);
+    background:rgba(255,250,246,.9);padding:.4rem .7rem;border-radius:20px;
+    box-shadow:0 4px 12px rgba(125,63,58,.14);opacity:0;transform:translateX(8px);
+    transition:opacity .5s,transform .5s;pointer-events:none;white-space:nowrap;}
+  .music-note.show{opacity:1;transform:none;}
+
+  @media(prefers-reduced-motion:reduce){
+    [data-reveal]{opacity:1 !important;transform:none !important;filter:none !important;}
+  }
+</style>
+</head>
+<body>
+  <canvas id="webgl"></canvas>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <canvas id="petals"></canvas>
+  <div class="progress" id="progress"></div>
+
+  <main>
+    <!-- 1. SORRY -->
+    <section data-screen-label="Sorry">
+      <div class="float">
+        <p class="eyebrow" data-reveal>a letter, only for you</p>
+        <h1 class="display" data-reveal>I am<br /><em>so&nbsp;sorry</em></h1>
+        <p class="lead" data-reveal>for the words I shouldn't have said, and the ones I forgot to say.</p>
+        <p class="name-hero" data-reveal>Shivani</p>
+      </div>
+      <div class="cue"><span>scroll</span><span class="stem"></span></div>
+    </section>
+
+    <!-- 2. MISSING -->
+    <section data-screen-label="Missing you">
+      <div class="panel">
+        <p class="eyebrow" data-reveal>right now</p>
+        <h2 class="display" data-reveal>I am<br /><em>missing you</em></h2>
+        <div class="divider" data-reveal></div>
+        <p class="lead sm" data-reveal>Every quiet hour is louder without you in it. The home holds its breath until you smile again.</p>
+      </div>
+    </section>
+
+    <!-- 3. LITTLE MOMENTS -->
+    <section data-screen-label="Little moments">
+      <div class="float">
+        <p class="eyebrow" data-reveal>you, and us</p>
+        <h2 class="display" data-reveal>A hundred<br /><em>little moments</em></h2>
+        <p class="lead" data-reveal>floating all around us — and I would relive every single one with you.</p>
+      </div>
+    </section>
+
+    <!-- 4. PERSONAL -->
+    <section data-screen-label="Meri pari Bivi">
+      <div class="panel">
+        <p class="script" data-reveal>Meri pari Bivi</p>
+        <p class="lead" data-reveal>My fairy, my wife — I never meant to dim the light you carry into every room. You are the softest, bravest, most beautiful part of my every day.</p>
+        <div class="dot" data-reveal></div>
+        <p class="lead sm" data-reveal>I'd cross a hundred storms just to hear you laugh once more.</p>
+      </div>
+    </section>
+
+    <!-- 5. LOVE -->
+    <section data-screen-label="I love you">
+      <div class="float">
+        <p class="eyebrow" data-reveal>and always, always</p>
+        <h2 class="display" data-reveal>I <em>love</em><br />you</h2>
+        <p class="lead" data-reveal>not just to mend this — but endlessly, stubbornly, completely.</p>
+      </div>
+    </section>
+
+    <!-- 6. SMILE -->
+    <section data-screen-label="Your smile">
+      <div class="float">
+        <p class="script" data-reveal>and that smile of yours…</p>
+        <p class="lead sm" data-reveal style="margin-top:1.4rem">the one that quietly fixes everything in me.</p>
+      </div>
+    </section>
+
+    <!-- 7. ENVELOPE -->
+    <section data-screen-label="Surprise">
+      <div class="panel">
+        <p class="eyebrow" data-reveal>a little something inside</p>
+        <div class="envelope-wrap" data-reveal>
+          <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open the letter">
+            <div class="env-body"></div>
+            <div class="letter">
+              <p class="mini">My promise</p>
+              <p>To listen more, to hold you closer, and to never let a sunset find us still apart. You&nbsp;+&nbsp;me — always worth it. <span class="heart">&#10084;</span></p>
+            </div>
+            <div class="flap"></div>
+            <div class="seal">S</div>
+          </div>
+          <p class="tap-hint"><span class="pulse"></span>Tap to open</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. CLOSING -->
+    <section data-screen-label="Forever">
+      <div class="panel">
+        <p class="eyebrow" data-reveal>until you forgive me, and long after</p>
+        <p class="signoff" data-reveal>Forever yours,<br />Pati&nbsp;Tyagi</p>
+        <div class="dot" data-reveal></div>
+        <p class="lead sm" data-reveal>Come back to me. I'll be right here, loving you.</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="music-note" id="musicNote">play a little softness</div>
+  <button class="music" id="music" aria-label="Toggle music">
+    <svg class="mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l9-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="15" cy="16" r="3"/></svg>
+    <div class="bars"><span></span><span></span><span></span><span></span></div>
+  </button>
+
+<script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="scene3d.js"></script>
+<script>
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Smooth scroll ---------- */
+let lenis=null;
+try{ if(window.Lenis && !reduce){ lenis=new Lenis({lerp:0.08,smoothWheel:true,wheelMultiplier:0.95});
+  document.documentElement.classList.add('lenis','lenis-smooth'); } }catch(e){ lenis=null; }
+
+const revealEls=[...document.querySelectorAll('[data-reveal]')];
+const progress=document.getElementById('progress');
+function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+
+function update(){
+  const vh=innerHeight;
+  for(const el of revealEls){
+    const r=el.getBoundingClientRect();
+    const start=vh*0.92,end=vh*0.5;
+    let p=(start-r.top)/(start-end); p=p<0?0:p>1?1:p;
+    const e=ease(p);
+    el.style.opacity=e.toFixed(3);
+    el.style.transform='translateY('+((1-e)*40).toFixed(2)+'px)';
+    el.style.filter=e<0.99?'blur('+((1-e)*6).toFixed(2)+'px)':'none';
+  }
+  const h=document.documentElement;
+  const max=h.scrollHeight-h.clientHeight;
+  const sp=max>0?(Math.min(window.scrollY,max)/max):0;
+  progress.style.width=(sp*100)+'%';
+  if(window.Scene3D) Scene3D.setScroll(sp);
+}
+
+function raf(time){ if(lenis) lenis.raf(time); update(); requestAnimationFrame(raf); }
+requestAnimationFrame(raf); update();
+addEventListener('resize',update);
+if(reduce) addEventListener('scroll',update,{passive:true});
+
+/* ---------- Pointer / tilt parallax for the 3D world ---------- */
+addEventListener('pointermove',e=>{
+  const x=(e.clientX/innerWidth)*2-1, y=(e.clientY/innerHeight)*2-1;
+  if(window.Scene3D) Scene3D.setPointer(x,-y);
+},{passive:true});
+addEventListener('deviceorientation',e=>{
+  if(e.gamma==null) return;
+  const x=Math.max(-1,Math.min(1,e.gamma/30)), y=Math.max(-1,Math.min(1,(e.beta-45)/30));
+  if(window.Scene3D) Scene3D.setPointer(x*0.8,-y*0.8);
+},{passive:true});
+
+/* ---------- Envelope ---------- */
+const env=document.getElementById('envelope');
+function openEnv(){ env.classList.add('open'); }
+env.addEventListener('click',openEnv);
+env.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();openEnv();}});
+
+/* ---------- 2D petals overlay ---------- */
+const cv=document.getElementById('petals'),ctx=cv.getContext('2d');
+let W,H,dpr;
+function resize(){dpr=Math.min(devicePixelRatio||1,2);W=cv.width=innerWidth*dpr;H=cv.height=innerHeight*dpr;
+  cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';}
+resize();addEventListener('resize',resize);
+const COLORS=['#e7b4ab','#d99b94','#f0cfc6','#c98a86','#ecc0b6'];
+function mk(initial){return{x:Math.random()*innerWidth,y:initial?Math.random()*innerHeight:-30,
+  r:5+Math.random()*8,sp:.3+Math.random()*.7,sway:.6+Math.random()*1.2,phase:Math.random()*6.28,
+  rot:Math.random()*6.28,vr:(Math.random()-.5)*.02,col:COLORS[(Math.random()*COLORS.length)|0],op:.35+Math.random()*.4};}
+const petals=[];const COUNT=innerWidth<560?12:20;
+for(let i=0;i<COUNT;i++)petals.push(mk(true));
+function drawP(p){ctx.save();ctx.translate(p.x*dpr,p.y*dpr);ctx.rotate(p.rot);ctx.scale(dpr,dpr);
+  ctx.globalAlpha=p.op;ctx.fillStyle=p.col;ctx.beginPath();ctx.moveTo(0,-p.r);
+  ctx.bezierCurveTo(p.r*.9,-p.r*.6,p.r*.7,p.r*.7,0,p.r);
+  ctx.bezierCurveTo(-p.r*.7,p.r*.7,-p.r*.9,-p.r*.6,0,-p.r);ctx.fill();ctx.restore();}
+let pt=0;
+function petalTick(){ctx.clearRect(0,0,W,H);pt+=.016;
+  for(const p of petals){p.y+=p.sp;p.x+=Math.sin(pt*p.sway+p.phase)*.5;p.rot+=p.vr;
+    if(p.y>innerHeight+30)Object.assign(p,mk(false));drawP(p);}requestAnimationFrame(petalTick);}
+if(!reduce)petalTick();else petals.forEach(drawP);
+
+/* ---------- Ambient music ---------- */
+const musicBtn=document.getElementById('music'),musicNote=document.getElementById('musicNote');
+let actx=null,master=null,playing=false;
+function buildAmbient(){
+  actx=new (window.AudioContext||window.webkitAudioContext)();
+  master=actx.createGain();master.gain.value=0.0001;
+  const lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1400;lp.Q.value=.4;
+  master.connect(lp);lp.connect(actx.destination);
+  [164.81,220,277.18,329.63,415.30].forEach((f,i)=>{
+    const o=actx.createOscillator();o.type=i%2?'sine':'triangle';o.frequency.value=f;o.detune.value=(Math.random()-.5)*6;
+    const g=actx.createGain();g.gain.value=.16/5;o.connect(g);g.connect(master);o.start();});
+  const lfo=actx.createOscillator();lfo.frequency.value=.07;const lg=actx.createGain();lg.gain.value=.05;
+  lfo.connect(lg);lg.connect(master.gain);lfo.start();
+}
+function toggleMusic(){
+  if(!actx)buildAmbient(); if(actx.state==='suspended')actx.resume();
+  playing=!playing;const now=actx.currentTime;
+  master.gain.cancelScheduledValues(now);master.gain.setValueAtTime(master.gain.value,now);
+  master.gain.linearRampToValueAtTime(playing?0.11:0.0001,now+(playing?2.2:1.0));
+  musicBtn.classList.toggle('playing',playing);
+}
+musicBtn.addEventListener('click',toggleMusic);
+setTimeout(()=>{if(!playing){musicNote.classList.add('show');setTimeout(()=>musicNote.classList.remove('show'),4200);}},2600);
+</script>
+</body>
+</html>
